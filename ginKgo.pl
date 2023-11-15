@@ -5,13 +5,13 @@ use warnings;
 no warnings 'uninitialized';
 use Getopt::Long;
 
-# Definir variables para las opciones
+# Define variables for options
 my $all_flag = 0;
 my $per_flag = 0;
 my $tiny_flag = 0;
 my $huge_flag = 0;
 
-# Especificar opciones permitidas
+# Specify allowed options
 GetOptions(
     "all" => \$all_flag,
     "per" => \$per_flag,
@@ -19,7 +19,7 @@ GetOptions(
     "huge" => \$huge_flag
 );
 
-# Verifica si se proporcionó al menos un archivo FASTA como argumento
+# Checks if at least one FASTA file was provided as an argument
 if (@ARGV < 1) {
     die("Uso: $0 <archivo1.fasta> [archivo2.fasta ...]\n");
 }
