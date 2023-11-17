@@ -24,68 +24,68 @@ if (@ARGV < 1) {
     die("Uso: $0 <archivo1.fasta> [archivo2.fasta ...]\n");
 }
 
-# Itera sobre cada archivo FASTA proporcionado como argumento
-foreach my $archivo_fasta (@ARGV) {
-#    all_process($archivo_fasta);
+# Iterates over each FASTA file given as an argument
+foreach my $fasta_file (@ARGV) {
+#    all_process($fasta_file);
 if($tiny_flag) {
-print "$archivo_fasta\tCodon\tAA\tFraction\tFrequency\tNumber\n";
+print "$fasta_file\tCodon\tAA\tFraction\tFrequency\tNumber\n";
 } elsif($huge_flag) {
-    my %tabla = tabla_codon_aa();
+    my %tabla = aa_codon_table();
     my @codones = sort { $tabla{$a} cmp $tabla{$b} } keys %tabla;
 
     print "codon\t", join("\t", @codones);
 }
 
 if($all_flag) {
-    my $secuencia = leer_archivo_fasta($archivo_fasta);
-    all_process($secuencia, $archivo_fasta);
+    my $secuencia = read_fasta_file($fasta_file);
+    all_process($secuencia, $fasta_file);
 } elsif ($per_flag) {
-    leer_archivo_fasta($archivo_fasta);
+    read_fasta_file($fasta_file);
 }
 } #ESTO PUEDE SER SUB 1 FORMATO 1 Y LA OTRA FORMATO 2
 
 sub all_process {
-#my $archivo_fasta = $ARGV[0];
-my ($secuencia, $archivo_fasta) = @_;
+#my $fasta_file = $ARGV[0];
+my ($secuencia, $fasta_file) = @_;
 
-# Llamar tabla de codones
-my %tabla_codon_aa = tabla_codon_aa();
+# Call up codon table
+my %aa_codon_table = aa_codon_table();
 
-# Inicializa contadores de codones y aminoácidos
-$secuencia =~ s/\s//g; # Remueve espacios en blanco
+# Initializes codon and amino acid counters
+$secuencia =~ s/\s//g; # Remove white space
 $secuencia = uc($secuencia);
-my ($contador_codones, $contador_aa, $total_codones) = contar_codones_y_aa($secuencia, \%tabla_codon_aa);
+my ($contador_codones, $contador_aa, $total_codones) = contar_codones_y_aa($secuencia, \%aa_codon_table);
 
-# Almacena los datos en una lista de hash
-my @datos = generar_datos($contador_codones, $contador_aa, $total_codones, \%tabla_codon_aa);
+# Store data in a hash list
+my @datos = generar_datos($contador_codones, $contador_aa, $total_codones, \%aa_codon_table);
 
-# Ordena la lista por aminoácido
+# Sort the list by amino acid
 @datos = sort { $a->{aa} cmp $b->{aa} } @datos;
 
 # Imprime la tabla ordenada
-imprimir_tabla(\@datos, $archivo_fasta);
+imprimir_tabla(\@datos, $fasta_file);
 
-# Guarda los resultados en un archivo de texto
-guardar_resultados(\@datos, $archivo_fasta);
+# Save the results to a text file
+guardar_resultados(\@datos, $fasta_file);
 } ### DIVIDIR ENTRE ALL y MAIN
 
 sub per_process {
     my ($encabezado, $secuencia) = @_;
 
-    my %tabla_codon_aa = tabla_codon_aa();
+    my %aa_codon_table = aa_codon_table();
 
-    # Procesa la secuencia
-    $secuencia =~ s/\s//g; # Remueve espacios en blanco
+    # Process the sequence
+    $secuencia =~ s/\s//g; # Remove white space
     $secuencia = uc($secuencia);
-    my ($contador_codones, $contador_aa, $total_codones) = contar_codones_y_aa($secuencia, \%tabla_codon_aa);
+    my ($contador_codones, $contador_aa, $total_codones) = contar_codones_y_aa($secuencia, \%aa_codon_table);
 
-    # Almacena los datos en una lista de hash
-    my @datos = generar_datos($contador_codones, $contador_aa, $total_codones, \%tabla_codon_aa);
+    # Store data in a hash list
+    my @datos = generar_datos($contador_codones, $contador_aa, $total_codones, \%aa_codon_table);
 
-    # Ordena la lista por aminoácido
+    # Sort the list by amino acid
     @datos = sort { $a->{aa} cmp $b->{aa} } @datos;
 
-    # Imprime la tabla ordenada
+    # Print the sorted table
     if($tiny_flag) {
         print_tiny_df_per($encabezado, \@datos);
     } elsif ($huge_flag){
@@ -95,10 +95,10 @@ sub per_process {
     }
 }
 
-# Subrutina para leer el archivo FASTA
-sub leer_archivo_fasta {
-    my ($archivo_fasta) = @_;
-    open my $fh, '<', $archivo_fasta or die("No se pudo abrir el archivo FASTA: $!\n");
+# Subroutine to read FASTA file
+sub read_fasta_file {
+    my ($fasta_file) = @_;
+    open my $fh, '<', $fasta_file or die("No se pudo abrir el archivo FASTA: $!\n");
     my $secuencia = "";
     my $encabezado_actual = "";
     while (my $linea = <$fh>) {
@@ -123,7 +123,7 @@ sub leer_archivo_fasta {
     return $secuencia;
 }
 
-# Subrutina para contar los codones y aminoácidos
+# Subroutine to count codons and amino acids
 sub contar_codones_y_aa {
     my ($secuencia, $tabla_codon_aa) = @_;
     my %contador_codones;
@@ -142,14 +142,14 @@ sub contar_codones_y_aa {
     return (\%contador_codones, \%contador_aa, $total_codones);
 }
 
-# Subrutina para generar los datos en formato de lista de hash
+# Subroutine to generate the data in hash list format
 sub generar_datos {
     my ($contador_codones, $contador_aa, $total_codones, $tabla_codon_aa, $puntuacion_codones) = @_;
     my @datos;
     
     for my $codon (sort keys %$tabla_codon_aa) {
         my $aa = $tabla_codon_aa->{$codon};
-        my $fraction = ($contador_codones->{$codon} // 0) / ($contador_aa->{$aa} // 0.001); # Usar 0.001 para evitar división por cero
+        my $fraction = ($contador_codones->{$codon} // 0) / ($contador_aa->{$aa} // 0.001); # Use 0.001 to avoid division by zero
         my $frequency = ($contador_codones->{$codon} // 0) / ($total_codones) * 100 // 0;
         my $number = $contador_codones->{$codon} // 0;
         # my $observada = $contador_codones->{$codon} // 0; # 
@@ -170,12 +170,12 @@ sub generar_datos {
     return @datos;
 }
 
-# Subrutina para imprimir la tabla
+# Subroutine to print the table
 sub imprimir_tabla {
-    my ($datos, $archivo_fasta) = @_;
+    my ($datos, $fasta_file) = @_;
     #print "Codon\tAA\tFraction\tFrequency\tNumber\n";
     for my $dato (@$datos) {
-        printf("%s\t%s\t%s\t%.3f\t%.3f\t%d\n", $archivo_fasta, $dato->{codon}, $dato->{aa}, $dato->{fraction}, $dato->{frequency}, $dato->{number});
+        printf("%s\t%s\t%s\t%.3f\t%.3f\t%d\n", $fasta_file, $dato->{codon}, $dato->{aa}, $dato->{fraction}, $dato->{frequency}, $dato->{number});
         #printf("%s\t%s\t%.3f\t%.3f\t%d\t%.3f\t%.3f\/%.3f\n", $dato->{codon}, $dato->{aa}, $dato->{fraction}, $dato->{frequency}, $dato->{number}, $dato->{puntuacion}, $dato->{observada},$dato->{esperada});
     }
 }
@@ -189,14 +189,14 @@ sub print_tiny_df_per {
     }
 }
 
-# Subrutina para guardar los resultados en un archivo de texto
+# Subroutine to save results to a text file
 sub guardar_resultados {
-    my ($datos, $archivo_fasta) = @_;
-    my $output_nombre_del_fichero = "output_" . $archivo_fasta . ".txt";
+    my ($datos, $fasta_file) = @_;
+    my $output_nombre_del_fichero = "output_" . $fasta_file . ".txt";
     open my $fh, '>', $output_nombre_del_fichero or die("No se pudo abrir el archivo de salida: $!\n");
     print $fh "Fasta\tCodon\tAA\tFraction\tFrequency\tNumber\n";
     for my $dato (@$datos) {
-        printf $fh "%s\t%s\t%s\t%.3f\t%.3f\t%d\n", $archivo_fasta, $dato->{codon}, $dato->{aa}, $dato->{fraction}, $dato->{frequency}, $dato->{number};
+        printf $fh "%s\t%s\t%s\t%.3f\t%.3f\t%d\n", $fasta_file, $dato->{codon}, $dato->{aa}, $dato->{fraction}, $dato->{frequency}, $dato->{number};
         #printf $fh "%s\t%s\t%.3f\t%.3f\t%d\t%.3f\n", $dato->{codon}, $dato->{aa}, $dato->{fraction}, $dato->{frequency}, $dato->{number}, $dato->{puntuacion};
     }
     close $fh;
@@ -214,7 +214,7 @@ sub print_huge_pr_df {
     }
 }
 
-sub tabla_codon_aa {
+sub aa_codon_table {
     my %tabla = (
         'GCA' => 'A', 'GCC' => 'A', 'GCG' => 'A', 'GCT' => 'A',
         'TGC' => 'C', 'TGT' => 'C',
