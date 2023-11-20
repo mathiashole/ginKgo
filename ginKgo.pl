@@ -129,22 +129,22 @@ sub contar_codones_y_aa {
     my %contador_codones;
     my %contador_aa;
     my $total_codones = length($secuencia) / 3;
-    
+
     for (my $i = 0; $i < length($secuencia) - 2; $i += 3) {
         my $codon = substr($secuencia, $i, 3);
         if (length($codon) == 3) {
             my $aa = $tabla_codon_aa->{$codon}; # 'X' para codones desconocidos
             $contador_codones{$codon}++;
             $contador_aa{$aa}++;
+
         }
     }
-
     return (\%contador_codones, \%contador_aa, $total_codones);
 }
 
 # Subroutine to generate the data in hash list format
 sub generar_datos {
-    my ($contador_codones, $contador_aa, $total_codones, $tabla_codon_aa, $puntuacion_codones, $letras_totales) = @_;
+    my ($contador_codones, $contador_aa, $total_codones, $tabla_codon_aa, $puntuacion_codones) = @_;
     my @datos;
     
     for my $codon (sort keys %$tabla_codon_aa) {
