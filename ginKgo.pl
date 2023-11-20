@@ -138,13 +138,13 @@ sub contar_codones_y_aa {
             $contador_aa{$aa}++;
         }
     }
-    
+
     return (\%contador_codones, \%contador_aa, $total_codones);
 }
 
 # Subroutine to generate the data in hash list format
 sub generar_datos {
-    my ($contador_codones, $contador_aa, $total_codones, $tabla_codon_aa, $puntuacion_codones) = @_;
+    my ($contador_codones, $contador_aa, $total_codones, $tabla_codon_aa, $puntuacion_codones, $letras_totales) = @_;
     my @datos;
     
     for my $codon (sort keys %$tabla_codon_aa) {
@@ -155,10 +155,9 @@ sub generar_datos {
         # my $observada = $contador_codones->{$codon} // 0; # 
         # my $esperada = ($contador_aa->{$aa} // 0.001) / (scalar(keys %$tabla_codon_aa)); # 
         # my $puntuacion = $observada / $esperada; #
-        #my $esperada = $contador_aa->{$aa} // 0.001;
-        #my $rscu = $number / $esperada // 0.001;
-        #my $letras_codifican_aa = $contador_letras->{$aa} // 1;
-        #my $rscu = ($esperada > 0) ? $number / ($esperada * 1 / $letras_codifican_aa) : 0;
+        # my $esperada = $contador_aa->{$aa} // 0.001;
+        # my $letras_codifican_aa = $letras_totales->{$aa} // 1;
+        # my $rscu = ($esperada > 0) ? $number / ($esperada * 1 / $letras_codifican_aa) : 0;
 
         push @datos, {
             codon => $codon,
@@ -168,7 +167,7 @@ sub generar_datos {
             number => $number,
             # puntuacion => $puntuacion,
             # observada => $observada,
-            #rscu => $rscu,
+            # rscu => $rscu,
         };
     }
     
