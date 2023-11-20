@@ -155,6 +155,8 @@ sub generar_datos {
         # my $observada = $contador_codones->{$codon} // 0; # 
         # my $esperada = ($contador_aa->{$aa} // 0.001) / (scalar(keys %$tabla_codon_aa)); # 
         # my $puntuacion = $observada / $esperada; #
+        #my $esperada = $contador_aa->{$aa} // 0.001;
+
         push @datos, {
             codon => $codon,
             aa => $aa,
@@ -163,7 +165,7 @@ sub generar_datos {
             number => $number,
             # puntuacion => $puntuacion,
             # observada => $observada,
-            # esperada => $esperada,
+            #esperada => $esperada,
         };
     }
     
@@ -185,7 +187,7 @@ sub print_tiny_df_per {
     #print "Codon\tAA\tFraction\tFrequency\tNumber\n";
     for my $dato (@$datos) {
         printf("%s\t%s\t%s\t%.3f\t%.3f\t%d\n", $encabezado, $dato->{codon}, $dato->{aa}, $dato->{fraction}, $dato->{frequency}, $dato->{number});
-        #printf("%s\t%s\t%.3f\t%.3f\t%d\t%.3f\t%.3f\/%.3f\n", $dato->{codon}, $dato->{aa}, $dato->{fraction}, $dato->{frequency}, $dato->{number}, $dato->{puntuacion}, $dato->{observada},$dato->{esperada});
+        #printf("%s\t%s\t%.3f\t%.3f\t%d\t%d\n", $dato->{codon}, $dato->{aa}, $dato->{fraction}, $dato->{frequency}, $dato->{number}, $dato->{esperada});
     }
 }
 
