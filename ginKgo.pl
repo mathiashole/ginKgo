@@ -156,6 +156,9 @@ sub generar_datos {
         # my $esperada = ($contador_aa->{$aa} // 0.001) / (scalar(keys %$tabla_codon_aa)); # 
         # my $puntuacion = $observada / $esperada; #
         #my $esperada = $contador_aa->{$aa} // 0.001;
+        #my $rscu = $number / $esperada // 0.001;
+        #my $letras_codifican_aa = $contador_letras->{$aa} // 1;
+        #my $rscu = ($esperada > 0) ? $number / ($esperada * 1 / $letras_codifican_aa) : 0;
 
         push @datos, {
             codon => $codon,
@@ -165,7 +168,7 @@ sub generar_datos {
             number => $number,
             # puntuacion => $puntuacion,
             # observada => $observada,
-            #esperada => $esperada,
+            #rscu => $rscu,
         };
     }
     
