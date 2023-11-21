@@ -130,6 +130,26 @@ sub contar_codones_y_aa {
     my %contador_aa;
     my $total_codones = length($secuencia) / 3;
 
+    ## rscu
+
+    my %contador_letras;
+
+    # Obtener el conteo de letras de aminoácidos
+    foreach my $codon (keys %$tabla_codon_aa) {
+        my $aa = $tabla_codon_aa->{$codon};
+        my @letras = split //, $aa;
+
+        foreach my $letra (@letras) {
+            $contador_letras{$letra}++;
+        }
+    }
+    
+    foreach my $letra (keys %contador_letras) {
+        print "$contador_letras{$letra}\n";
+    }
+
+    ##
+
     for (my $i = 0; $i < length($secuencia) - 2; $i += 3) {
         my $codon = substr($secuencia, $i, 3);
         if (length($codon) == 3) {
