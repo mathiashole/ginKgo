@@ -132,22 +132,18 @@ sub contar_codones_y_aa {
 
     ## rscu
 
-    my %contador_letras;
+    # my %contador_letter;
 
-    # Obtener el conteo de letras de aminoácidos
-    foreach my $codon (keys %$tabla_codon_aa) {
-        my $aa = $tabla_codon_aa->{$codon};
-        my @letras = split //, $aa;
+    # #Obtener el conteo de letter de aminoácidos
+    # foreach my $codon (keys %$tabla_codon_aa) {
+    #     my $aa = $tabla_codon_aa->{$codon};
+    #     my @letter = split //, $aa;
 
-        foreach my $letra (@letras) {
-            $contador_letras{$letra}++;
-        }
-    }
+    #     foreach my $by_letter (@letter) {
+    #         $contador_letter{$by_letter}++;
+    #     }
+    # }
     
-    foreach my $letra (keys %contador_letras) {
-        print "$contador_letras{$letra}\n";
-    }
-
     ##
 
     for (my $i = 0; $i < length($secuencia) - 2; $i += 3) {
@@ -156,9 +152,9 @@ sub contar_codones_y_aa {
             my $aa = $tabla_codon_aa->{$codon}; # 'X' para codones desconocidos
             $contador_codones{$codon}++;
             $contador_aa{$aa}++;
-
         }
     }
+
     return (\%contador_codones, \%contador_aa, $total_codones);
 }
 
@@ -166,6 +162,7 @@ sub contar_codones_y_aa {
 sub generar_datos {
     my ($contador_codones, $contador_aa, $total_codones, $tabla_codon_aa, $puntuacion_codones) = @_;
     my @datos;
+    my %contador_letter;
     
     for my $codon (sort keys %$tabla_codon_aa) {
         my $aa = $tabla_codon_aa->{$codon};
@@ -176,8 +173,8 @@ sub generar_datos {
         # my $esperada = ($contador_aa->{$aa} // 0.001) / (scalar(keys %$tabla_codon_aa)); # 
         # my $puntuacion = $observada / $esperada; #
         # my $esperada = $contador_aa->{$aa} // 0.001;
-        # my $letras_codifican_aa = $letras_totales->{$aa} // 1;
-        # my $rscu = ($esperada > 0) ? $number / ($esperada * 1 / $letras_codifican_aa) : 0;
+        # my $letter_codifican_aa = $letter_totales->{$aa} // 1;
+        # my $rscu = ($esperada > 0) ? $number / ($esperada * 1 / $letter_codifican_aa) : 0;
 
         push @datos, {
             codon => $codon,
