@@ -51,6 +51,13 @@ my ($secuencia, $fasta_file) = @_;
 # Call up codon table
 my %aa_codon_table = aa_codon_table();
 
+## proof rscu ##############################################################################
+
+count_aa_in_tab(\%aa_codon_table);
+
+############################################################################################
+
+
 # Initializes codon and amino acid counters
 $secuencia =~ s/\s//g; # Remove white space
 $secuencia = uc($secuencia);
@@ -130,22 +137,6 @@ sub contar_codones_y_aa {
     my %contador_aa;
     my $total_codones = length($secuencia) / 3;
 
-    ## rscu
-
-    # my %contador_letter;
-
-    # #Obtener el conteo de letter de aminoácidos
-    # foreach my $codon (keys %$tabla_codon_aa) {
-    #     my $aa = $tabla_codon_aa->{$codon};
-    #     my @letter = split //, $aa;
-
-    #     foreach my $by_letter (@letter) {
-    #         $contador_letter{$by_letter}++;
-    #     }
-    # }
-    
-    ##
-
     for (my $i = 0; $i < length($secuencia) - 2; $i += 3) {
         my $codon = substr($secuencia, $i, 3);
         if (length($codon) == 3) {
@@ -162,13 +153,15 @@ sub contar_codones_y_aa {
 sub generar_datos {
     my ($contador_codones, $contador_aa, $total_codones, $tabla_codon_aa, $puntuacion_codones) = @_;
     my @datos;
-    my %contador_letter;
     
     for my $codon (sort keys %$tabla_codon_aa) {
         my $aa = $tabla_codon_aa->{$codon};
         my $fraction = ($contador_codones->{$codon} // 0) / ($contador_aa->{$aa} // 0.001); # Use 0.001 to avoid division by zero
         my $frequency = ($contador_codones->{$codon} // 0) / ($total_codones) * 100 // 0;
         my $number = $contador_codones->{$codon} // 0;
+        print "$contador_codones->{$aa}\n";
+        print "$contador_codones->{$codon}\n";
+
         # my $observada = $contador_codones->{$codon} // 0; # 
         # my $esperada = ($contador_aa->{$aa} // 0.001) / (scalar(keys %$tabla_codon_aa)); # 
         # my $puntuacion = $observada / $esperada; #
@@ -260,4 +253,23 @@ sub aa_codon_table {
         'TAA' => '*', 'TAG' => '*', 'TGA' => '*',
     );
     return %tabla;
+}
+
+sub count_aa_in_tab {
+    my ($tabla_codon_aa) = @_;
+    ## rscu
+
+    my %contador_letter;
+
+    #Obtener el conteo de letter de aminoácidos
+    foreach my $codon (keys %$tabla_codon_aa) {
+        my $aa = $tabla_codon_aa->{$codon};
+        my @letter = split //, $aa;
+
+        foreach my $by_letter (@letter) {
+            $contador_letter{$by_letter}++;
+        }
+    }
+
+    return (\%contador_letter);
 }
