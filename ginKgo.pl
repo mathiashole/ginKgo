@@ -77,11 +77,10 @@ sub per_process {
     # Process the sequence
     $secuencia =~ s/\s//g; # Remove white space
     $secuencia = uc($secuencia);
-    my $count_aa = count_aa_in_tab(\%aa_codon_table);
     my ($contador_codones, $contador_aa, $total_codones) = contar_codones_y_aa($secuencia, \%aa_codon_table);
 
     # Store data in a hash list
-    my @datos = generar_datos($contador_codones, $contador_aa, $total_codones, \%aa_codon_table, $count_aa);
+    my @datos = generar_datos($contador_codones, $contador_aa, $total_codones, \%aa_codon_table);
 
     # Sort the list by amino acid
     @datos = sort { $a->{aa} cmp $b->{aa} } @datos;
@@ -147,7 +146,7 @@ sub contar_codones_y_aa {
 sub generar_datos {
     my ($contador_codones, $contador_aa, $total_codones, $tabla_codon_aa, $puntuacion_codones, $count_aa) = @_;
     my @datos;
-    
+
     for my $codon (sort keys %$tabla_codon_aa) {
         my $aa = $tabla_codon_aa->{$codon};
         my $fraction = ($contador_codones->{$codon} // 0) / ($contador_aa->{$aa} // 0.001); # Use 0.001 to avoid division by zero
