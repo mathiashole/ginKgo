@@ -51,13 +51,6 @@ my ($secuencia, $fasta_file) = @_;
 # Call up codon table
 my %aa_codon_table = aa_codon_table();
 
-## proof rscu ##############################################################################
-
-count_aa_in_tab(\%aa_codon_table);
-
-############################################################################################
-
-
 # Initializes codon and amino acid counters
 $secuencia =~ s/\s//g; # Remove white space
 $secuencia = uc($secuencia);
@@ -84,10 +77,11 @@ sub per_process {
     # Process the sequence
     $secuencia =~ s/\s//g; # Remove white space
     $secuencia = uc($secuencia);
+    my $count_aa = count_aa_in_tab(\%aa_codon_table);
     my ($contador_codones, $contador_aa, $total_codones) = contar_codones_y_aa($secuencia, \%aa_codon_table);
 
     # Store data in a hash list
-    my @datos = generar_datos($contador_codones, $contador_aa, $total_codones, \%aa_codon_table);
+    my @datos = generar_datos($contador_codones, $contador_aa, $total_codones, \%aa_codon_table, $count_aa);
 
     # Sort the list by amino acid
     @datos = sort { $a->{aa} cmp $b->{aa} } @datos;
@@ -151,7 +145,7 @@ sub contar_codones_y_aa {
 
 # Subroutine to generate the data in hash list format
 sub generar_datos {
-    my ($contador_codones, $contador_aa, $total_codones, $tabla_codon_aa, $puntuacion_codones) = @_;
+    my ($contador_codones, $contador_aa, $total_codones, $tabla_codon_aa, $puntuacion_codones, $count_aa) = @_;
     my @datos;
     
     for my $codon (sort keys %$tabla_codon_aa) {
