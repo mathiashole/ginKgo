@@ -159,8 +159,6 @@ sub generar_datos {
         my $fraction = ($contador_codones->{$codon} // 0) / ($contador_aa->{$aa} // 0.001); # Use 0.001 to avoid division by zero
         my $frequency = ($contador_codones->{$codon} // 0) / ($total_codones) * 100 // 0;
         my $number = $contador_codones->{$codon} // 0;
-        print "$contador_codones->{$aa}\n";
-        print "$contador_codones->{$codon}\n";
 
         # my $observada = $contador_codones->{$codon} // 0; # 
         # my $esperada = ($contador_aa->{$aa} // 0.001) / (scalar(keys %$tabla_codon_aa)); # 
