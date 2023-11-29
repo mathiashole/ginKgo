@@ -42,7 +42,7 @@ if($all_flag) {
 } elsif ($per_flag) {
     read_fasta_file($fasta_file);
 }
-} #ESTO PUEDE SER SUB 1 FORMATO 1 Y LA OTRA FORMATO 2
+} ##ESTO PUEDE SER SUB 1 FORMATO 1 Y LA OTRA FORMATO 2
 
 sub all_process {
 #my $fasta_file = $ARGV[0];
