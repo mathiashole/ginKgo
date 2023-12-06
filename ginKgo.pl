@@ -150,7 +150,7 @@ sub generar_datos {
     for my $codon (sort keys %$tabla_codon_aa) {
         my $aa = $tabla_codon_aa->{$codon};
         my $fraction = ($contador_codones->{$codon} // 0) / ($contador_aa->{$aa} // 0.001); # Use 0.001 to avoid division by zero
-        my $frequency = ($contador_codones->{$codon} // 0) / ($total_codones) * 100 // 0;
+        my $frequency = ($contador_codones->{$codon} // 0) / ($total_codones) * 100 // 0; # need verificated
         my $number = $contador_codones->{$codon} // 0;
 
         # my $observada = $contador_codones->{$codon} // 0; # 
