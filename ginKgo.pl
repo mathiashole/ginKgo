@@ -152,13 +152,16 @@ sub generar_datos {
         my $fraction = ($contador_codones->{$codon} // 0) / ($contador_aa->{$aa} // 0.001); # Use 0.001 to avoid division by zero
         my $frequency = ($contador_codones->{$codon} // 0) / ($total_codones) * 100 // 0; # need verificated
         my $number = $contador_codones->{$codon} // 0;
+
+
+        #my $rscu = ($contador_codones->{$codon} // 0) / ($contador_aa->{$aa} // 0.001); 
         # need add rscu!
         # my $observada = $contador_codones->{$codon} // 0; # 
         # my $esperada = ($contador_aa->{$aa} // 0.001) / (scalar(keys %$tabla_codon_aa)); # 
         # my $puntuacion = $observada / $esperada; #
         # my $esperada = $contador_aa->{$aa} // 0.001;
         # my $letter_codifican_aa = $letter_totales->{$aa} // 1;
-        # my $rscu = ($esperada > 0) ? $number / ($esperada * 1 / $letter_codifican_aa) : 0;
+        # my $rscu = ($contador_codones->{$codon} // 0) / ($contador_aa->{$aa} // 0.001); 
 
         push @datos, {
             codon => $codon,
@@ -171,7 +174,7 @@ sub generar_datos {
             # rscu => $rscu,
         };
     }
-    
+
     return @datos;
 }
 
